@@ -69,9 +69,6 @@
     }
 
     .milestone {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       padding: 1rem;
       background: #f8f9fa;
       border-radius: 10px;
@@ -99,6 +96,8 @@
       border-radius: 5px;
       cursor: pointer;
       transition: background 0.3s ease;
+      display: inline-block;
+      margin-top: 5px;
     }
 
     .milestone .status:hover {
@@ -106,18 +105,22 @@
     }
 
     .remarks {
-      margin-left: 10px;
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      padding: 0.5rem;
       font-size: 0.9rem;
-      color: #666;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Research Milestones Tracker</h1>
+    <h1>🚀 Research Milestones Tracker</h1>
     <div class="add-stage">
       <input type="text" id="newStage" placeholder="Add a new stage">
-      <button onclick="addStage()">Add Stage</button>
+      <button onclick="addStage()">➕ Add Stage</button>
     </div>
     <div class="milestones">
       <!-- Milestones will be dynamically added here -->
@@ -125,42 +128,39 @@
   </div>
 
   <script>
-    // Predefined milestones
     const milestones = [
-      "Guide Identification",
-      "Research field selection",
-      "Coursework subject selection",
-      "Coursework completion",
-      "Comprehensive exam completion",
-      "Research objectives finalization",
-      "Proposal defence exam",
-      "1st paper publication",
-      "2nd paper publication",
-      "Open seminar to the audience",
-      "Synopsis submission",
-      "Thesis defence",
-      "Thesis submission",
-      "Degree awarding"
+      "🔍 Guide Identification",
+      "📚 Research field selection",
+      "📖 Coursework subject selection",
+      "✅ Coursework completion",
+      "📝 Comprehensive exam completion",
+      "🎯 Research objectives finalization",
+      "🛡️ Proposal defence exam",
+      "📰 1st paper publication",
+      "📜 2nd paper publication",
+      "🎤 Open seminar to the audience",
+      "📑 Synopsis submission",
+      "🏆 Thesis defence",
+      "📕 Thesis submission",
+      "🎓 Degree awarding"
     ];
 
-    // Function to render milestones
     function renderMilestones() {
       const milestonesContainer = document.querySelector('.milestones');
-      milestonesContainer.innerHTML = ''; // Clear existing milestones
+      milestonesContainer.innerHTML = '';
 
       milestones.forEach((milestone, index) => {
         const milestoneElement = document.createElement('div');
         milestoneElement.classList.add('milestone');
         milestoneElement.innerHTML = `
           <span>${index + 1}. ${milestone}</span>
-          <input type="text" class="remarks" placeholder="Remarks">
+          <textarea class="remarks" placeholder="Add remarks..."></textarea>
           <div class="status" onclick="toggleCompletion(this)">Pending</div>
         `;
         milestonesContainer.appendChild(milestoneElement);
       });
     }
 
-    // Function to toggle completion status
     function toggleCompletion(element) {
       const milestone = element.parentElement;
       if (element.textContent === 'Pending') {
@@ -172,20 +172,18 @@
       }
     }
 
-    // Function to add a new stage
     function addStage() {
       const newStageInput = document.getElementById('newStage');
       const newStage = newStageInput.value.trim();
       if (newStage) {
-        milestones.push(newStage);
+        milestones.push(`🆕 ${newStage}`);
         renderMilestones();
-        newStageInput.value = ''; // Clear input
+        newStageInput.value = '';
       } else {
         alert('Please enter a valid stage name.');
       }
     }
 
-    // Initial render
     renderMilestones();
   </script>
 </body>
