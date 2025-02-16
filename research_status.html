@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        input, button {
+            width: 90%;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #ff758c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ff5470;
+        }
+        table {
+            width: 100%;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #ff7eb3;
+            color: white;
+        }
+        .delete-btn {
+            background: #ff4d4d;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📌 To-Do List</h2>
+        <input type="text" id="task" placeholder="Task Name">
+        <input type="date" id="dueDate">
+        <input type="text" id="remarks" placeholder="Remarks">
+        <button onclick="addTask()">Add Task</button>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Task</th>
+                    <th>Due Date</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="taskList"></tbody>
+        </table>
+    </div>
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        function addTask() {
+            let task = document.getElementById('task').value;
+            let dueDate = document.getElementById('dueDate').value;
+            let remarks = document.getElementById('remarks').value;
+            if (task === '') {
+                alert('Please enter a task!');
+                return;
+            }
+            tasks.push({ task, dueDate, remarks });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            displayTasks();
+        }
+        function displayTasks() {
+            let tableBody = document.getElementById('taskList');
+            tableBody.innerHTML = '';
+            tasks.forEach((task, index) => {
+                let row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${task.task}</td>
+                    <td>${task.dueDate}</td>
+                    <td>${task.remarks}</td>
+                    <td><button class="delete-btn" onclick="deleteTask(${index})">Delete</button></td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            displayTasks();
+        }
+        displayTasks();
+    </script>
+</body>
+</html>
