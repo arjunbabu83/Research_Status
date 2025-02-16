@@ -85,7 +85,6 @@
 
     .milestone.completed {
       background: #d4edda;
-      text-decoration: line-through;
       color: #155724;
     }
 
@@ -104,6 +103,12 @@
 
     .milestone .status:hover {
       background: #5a6268;
+    }
+
+    .remarks {
+      margin-left: 10px;
+      font-size: 0.9rem;
+      color: #666;
     }
   </style>
 </head>
@@ -148,6 +153,7 @@
         milestoneElement.classList.add('milestone');
         milestoneElement.innerHTML = `
           <span>${index + 1}. ${milestone}</span>
+          <input type="text" class="remarks" placeholder="Remarks">
           <div class="status" onclick="toggleCompletion(this)">Pending</div>
         `;
         milestonesContainer.appendChild(milestoneElement);
