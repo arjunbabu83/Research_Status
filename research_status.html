@@ -79,7 +79,7 @@
         </table>
     </div>
     <script>
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let tasks = [];
         function addTask() {
             let task = document.getElementById('task').value;
             let dueDate = document.getElementById('dueDate').value;
@@ -89,7 +89,6 @@
                 return;
             }
             tasks.push({ task, dueDate, remarks });
-            localStorage.setItem('tasks', JSON.stringify(tasks));
             displayTasks();
         }
         function displayTasks() {
@@ -108,10 +107,8 @@
         }
         function deleteTask(index) {
             tasks.splice(index, 1);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
             displayTasks();
         }
-        displayTasks();
     </script>
 </body>
 </html>
