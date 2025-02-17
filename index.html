@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Research Status Tracker</title>
   <style>
-    /* General Styles */
     body {
       font-family: 'Arial', sans-serif;
       background: linear-gradient(135deg, #ff9a9e, #fad0c4);
@@ -17,7 +16,6 @@
       align-items: center;
       min-height: 100vh;
     }
-
     .container {
       background: rgba(255, 255, 255, 0.9);
       padding: 2rem;
@@ -27,19 +25,13 @@
       max-width: 800px;
       text-align: left;
     }
-
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      color: #444;
       text-align: center;
     }
-
     .add-stage {
-      margin-bottom: 2rem;
       text-align: center;
+      margin-bottom: 1.5rem;
     }
-
     .add-stage input {
       padding: 0.5rem;
       font-size: 1.2rem;
@@ -48,7 +40,6 @@
       width: 60%;
       margin-right: 0.5rem;
     }
-
     .add-stage button {
       padding: 0.5rem 1rem;
       font-size: 1.2rem;
@@ -57,19 +48,12 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s ease;
     }
-
-    .add-stage button:hover {
-      background: #218838;
-    }
-
     .milestones {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
     }
-
     .milestone {
       padding: 1.5rem;
       background: #f8f9fa;
@@ -77,32 +61,23 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       font-size: 1.4rem;
     }
-
     .milestone.completed {
       background: #d4edda;
       color: #155724;
     }
-
-    .milestone.completed .status {
-      background: #28a745;
-    }
-
-    .milestone .status {
+    .status {
       padding: 0.7rem 1.2rem;
       background: #6c757d;
       color: white;
       border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s ease;
       display: inline-block;
       margin-top: 10px;
       font-size: 1rem;
     }
-
-    .milestone .status:hover {
+    .status:hover {
       background: #5a6268;
     }
-
     .remarks {
       display: block;
       width: 100%;
@@ -111,19 +86,6 @@
       font-size: 1.2rem;
       border: 1px solid #ccc;
       border-radius: 5px;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        width: 95%;
-        padding: 1rem;
-      }
-      .add-stage input {
-        width: 70%;
-      }
-      .milestone {
-        font-size: 1.2rem;
-      }
     }
   </style>
 </head>
@@ -134,61 +96,53 @@
       <input type="text" id="newStage" placeholder="Add a new stage">
       <button onclick="addStage()">➕ Add Stage</button>
     </div>
-    <div class="milestones">
-      <!-- Milestones will be dynamically added here -->
-    </div>
+    <div class="milestones" id="milestonesContainer"></div>
   </div>
 
   <script>
-    const milestones = [
-      "🔍 Guide Identification",
-      "📚 Research field selection",
-      "📖 Coursework subject selection",
-      "✅ Coursework completion",
-      "📝 Comprehensive exam completion",
-      "🎯 Research objectives finalization",
-      "🛡️ Proposal defence exam",
-      "📰 1st paper publication",
-      "📜 2nd paper publication",
-      "🎤 Open seminar to the audience",
-      "📑 Synopsis submission",
-      "🏆 Thesis defence",
-      "📕 Thesis submission",
-      "🎓 Degree awarding"
+    let milestones = JSON.parse(localStorage.getItem('milestones')) || [
+      { name: "🔍 Guide Identification", completed: false, remarks: "" },
+      { name: "📚 Research field selection", completed: false, remarks: "" },
+      { name: "📖 Coursework subject selection", completed: false, remarks: "" },
     ];
 
-    function renderMilestones() {
-      const milestonesContainer = document.querySelector('.milestones');
-      milestonesContainer.innerHTML = '';
+    function saveMilestones() {
+      localStorage.setItem('milestones', JSON.stringify(milestones));
+    }
 
+    function renderMilestones() {
+      const milestonesContainer = document.getElementById('milestonesContainer');
+      milestonesContainer.innerHTML = '';
       milestones.forEach((milestone, index) => {
         const milestoneElement = document.createElement('div');
         milestoneElement.classList.add('milestone');
+        if (milestone.completed) milestoneElement.classList.add('completed');
         milestoneElement.innerHTML = `
-          <span>${index + 1}. ${milestone}</span>
-          <textarea class="remarks" placeholder="Add remarks..."></textarea>
-          <div class="status" onclick="toggleCompletion(this)">Pending</div>
+          <span>${index + 1}. ${milestone.name}</span>
+          <textarea class="remarks" placeholder="Add remarks..." oninput="updateRemarks(${index}, this.value)">${milestone.remarks}</textarea>
+          <div class="status" onclick="toggleCompletion(${index})">${milestone.completed ? 'Completed' : 'Pending'}</div>
         `;
         milestonesContainer.appendChild(milestoneElement);
       });
     }
 
-    function toggleCompletion(element) {
-      const milestone = element.parentElement;
-      if (element.textContent === 'Pending') {
-        element.textContent = 'Completed';
-        milestone.classList.add('completed');
-      } else {
-        element.textContent = 'Pending';
-        milestone.classList.remove('completed');
-      }
+    function toggleCompletion(index) {
+      milestones[index].completed = !milestones[index].completed;
+      saveMilestones();
+      renderMilestones();
+    }
+
+    function updateRemarks(index, value) {
+      milestones[index].remarks = value;
+      saveMilestones();
     }
 
     function addStage() {
       const newStageInput = document.getElementById('newStage');
       const newStage = newStageInput.value.trim();
       if (newStage) {
-        milestones.push(`🆕 ${newStage}`);
+        milestones.push({ name: `🆕 ${newStage}`, completed: false, remarks: "" });
+        saveMilestones();
         renderMilestones();
         newStageInput.value = '';
       } else {
